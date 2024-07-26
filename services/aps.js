@@ -18,7 +18,7 @@ service.authCallbackMiddleware = async (req, res, next) => {
     const internalCredentials = await authenticationClient.getThreeLeggedToken(APS_CLIENT_ID, req.query.code, APS_CALLBACK_URL, {
         clientSecret: APS_CLIENT_SECRET
     });
-    const publicCredentials = await authenticationClient.getRefreshToken(APS_CLIENT_ID, internalCredentials.refresh_token, {
+    const publicCredentials = await authenticationClient.refreshToken(APS_CLIENT_ID, internalCredentials.refresh_token, {
         clientSecret: APS_CLIENT_SECRET,
         scopes: [Scopes.ViewablesRead]
     });
@@ -37,11 +37,11 @@ service.authRefreshMiddleware = async (req, res, next) => {
     }
 
     if (expires_at < Date.now()) {
-        const internalCredentials = await authenticationClient.getRefreshToken(APS_CLIENT_ID, refresh_token, {
+        const internalCredentials = await authenticationClient.refreshToken(APS_CLIENT_ID, refresh_token, {
             clientSecret: APS_CLIENT_SECRET,
             scopes: [Scopes.DataRead, Scopes.DataCreate]
         });
-        const publicCredentials = await authenticationClient.getRefreshToken(APS_CLIENT_ID, internalCredentials.refresh_token, {
+        const publicCredentials = await authenticationClient.refreshToken(APS_CLIENT_ID, internalCredentials.refresh_token, {
             clientSecret: APS_CLIENT_SECRET,
             scopes: [Scopes.ViewablesRead]
         });
